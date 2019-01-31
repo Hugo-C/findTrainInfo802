@@ -29,11 +29,11 @@ def get_station_id(station_name):
     return res.json()["places"][0]["id"]   # TODO  check if place exists
 
 
-def getTains(from_city, to_city):
+def getTains(from_city, to_city, date):
     res = []
     from_city_id = get_station_id(from_city)
     to_city_id = get_station_id(to_city)
-    res_timetable = timetable(from_city_id, to_city_id, datetime.datetime.now().isoformat())
+    res_timetable = timetable(from_city_id, to_city_id, date.isoformat())
     return res_timetable.json()
 
 

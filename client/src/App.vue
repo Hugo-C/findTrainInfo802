@@ -10,8 +10,9 @@ export default {
 };
 </script>
 
+
 <style>
 #app {
-  margin-top: 60px;
+  margin-top: 30px;
 }
 </style>

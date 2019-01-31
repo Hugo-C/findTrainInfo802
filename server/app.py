@@ -1,3 +1,5 @@
+import datetime
+
 import dateutil
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -66,7 +68,13 @@ def not_found():
 def find_train():
     from_city = request.args.get('fromCity')
     to_city = request.args.get('toCity')
-    timetable = trains.getTains(from_city, to_city)
+    raw_datetime = request.args.get('datetime')
+    print(raw_datetime)
+    date_wanted = dateutil.parser.parse(raw_datetime)
+    print(date_wanted)
+    # date_wanted = datetime.datetime.now()
+    # print(date_wanted)
+    timetable = trains.getTains(from_city, to_city, date_wanted)
     journeys = []
     for journey in timetable["journeys"]:
         departure_date = dateutil.parser.parse(journey['departure_date_time'])
