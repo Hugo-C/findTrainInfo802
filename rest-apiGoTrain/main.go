@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-const KmPriceRatio = 0.976455
+const KmPriceRatio = 0.223
 
 type responseKmToPrice struct {
 	Devise   string  `json:"devise"`

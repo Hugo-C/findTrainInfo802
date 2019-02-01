@@ -74,7 +74,7 @@ def find_train():
     print(date_wanted)
     # date_wanted = datetime.datetime.now()
     # print(date_wanted)
-    timetable = trains.getTains(from_city, to_city, date_wanted)
+    timetable = trains.get_trains(from_city, to_city, date_wanted)
     journeys = []
     for journey in timetable["journeys"]:
         departure_date = dateutil.parser.parse(journey['departure_date_time'])
