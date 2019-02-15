@@ -1,17 +1,27 @@
-import requests
-
 import datetime
-import dateutil.parser
+
+import requests
 from zeep import Client
 
 API_KEY = "2e7f2092-fa93-4661-947c-e09444d5bd26"  # TODO get in a file
-#API_KEY_NAVITIA = "f2e975ad-24a8-4c0a-9d0c-0c9c230531d9"
 
 url = "https://api.sncf.com/v1/coverage/sncf/journeys?from=admin:fr:75056&to=admin:fr:69123&datetime=20190124T100549"
 
 CITY_TO_DISTANCE_SOAP_URL = "http://soapwebserviceusmb.azurewebsites.net:80/services/HelloWorld?wsdl"
 PRICE_URL = "https://fathomless-ridge-71475.herokuapp.com/kmToPrice/"
 DIVISE = "euro"
+
+client = Client(CITY_TO_DISTANCE_SOAP_URL)
+
+places_cache = {}
+
+
+def get_place_info(place):
+    if place not in places_cache:
+        res = requests.get(f"https://api.sncf.com/v1/coverage/sncf/places?q={place}"
+                           , auth=(API_KEY, ""))
+        places_cache[place] = res.json()
+    return places_cache[place]
 
 
 def format_datetime(date: datetime) -> str:
@@ -32,13 +42,13 @@ def timetable(gare_start_code, gare_stop_code, time_start, count=10, page=0):
 
 
 def get_station_id(station_name):
-    res = requests.get(f"https://api.sncf.com/v1/coverage/sncf/places?q={station_name}", auth=(API_KEY, ""))
-    return res.json()["places"][0]["id"]   # TODO  check if place exists
+    station_data = get_place_info(station_name)
+    return station_data["places"][0]["id"]
 
 
-def get_station_coordinate(station_name):  # FIXME cache result ??
-    res = requests.get(f"https://api.sncf.com/v1/coverage/sncf/places?q={station_name}", auth=(API_KEY, ""))
-    place = res.json()["places"][0]
+def get_station_coordinate(station_name):
+    station_data = get_place_info(station_name)
+    place = station_data["places"][0]
     coordinate = place["administrative_region"]["coord"]
     return coordinate["lat"], coordinate["lon"]
 
@@ -53,7 +63,6 @@ def get_trains(from_city, to_city, date):
 def get_distance(from_city, to_city):
     lat1, long1 = get_station_coordinate(from_city)
     lat2, long2 = get_station_coordinate(to_city)
-    client = Client(CITY_TO_DISTANCE_SOAP_URL)  # TODO use singleton
     result = client.service.getPrice(lat1, long1, lat2, long2)
     return float(result)
 
