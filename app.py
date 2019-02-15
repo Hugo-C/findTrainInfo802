@@ -6,6 +6,7 @@ from flask_cors import CORS
 
 # configuration
 from server import trains
+from server.trains import get_journey_price
 
 DEBUG = True
 
@@ -75,17 +76,19 @@ def find_train():
     # date_wanted = datetime.datetime.now()
     # print(date_wanted)
     timetable = trains.get_trains(from_city, to_city, date_wanted)
+    print(timetable)
     journeys = []
     for journey in timetable["journeys"]:
         departure_date = dateutil.parser.parse(journey['departure_date_time'])
         arrival_date = dateutil.parser.parse(journey['arrival_date_time'])
         journeys.append({"duration": journey['duration'],
-                         "departure_date": departure_date,
-                         "arrival_date": arrival_date})
+                         "departure_date": departure_date.isoformat(),
+                         "arrival_date": arrival_date.isoformat()})
     res = {"status": "success",
            "fromCity": from_city,
            "toCity": to_city,
-           "journeys": journeys}
+           "journeys": journeys,
+           "price": 30} #get_journey_price(from_city, to_city)}
     print(res)
     print(f"number of hits : {len(journeys)}")
     res = jsonify(res)
