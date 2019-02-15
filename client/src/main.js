@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import BootstrapVue from 'bootstrap-vue';
 import Datetime from 'vue-datetime';
 import moment from 'moment';
+import numeral from 'numeral';
 
 import Vue from 'vue';
 import App from './App';
@@ -17,7 +18,7 @@ Vue.use(Datetime);
 
 Vue.filter('formatDate', function(value) {
   if (value) {
-    return moment(String(value)).format('MM/DD/YYYY hh:mm')
+    return moment(String(value)).format('MM/DD/YYYY HH:mm')
   }
 });
 
@@ -26,6 +27,12 @@ Vue.filter('formatDuration', function(value) {
   if (value) {
     return Math.floor(value / 60) + "H" + value % 60 + "m";
   }
+});
+
+
+Vue.filter('formatPrice', function (value) {
+  return numeral(value)
+    .format('0,0.00'); // displaying other groupings/separators is possible, look at the docs
 });
 
 /* eslint-disable no-new */

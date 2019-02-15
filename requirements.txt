@@ -1,6 +1,0 @@
-requests
-flask
-python-dateutil
-flask_cors
-lxml==4.2.5
-zeep

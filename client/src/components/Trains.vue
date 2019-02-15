@@ -59,7 +59,7 @@
           <td>{{ journey.arrival_date | formatDate}}</td>
           <td>{{ journey.duration | formatDuration }}</td>
           <td>
-            <button type="button" class="btn btn-warning btn-sm">Buy tickets</button>
+            <button type="button" class="btn btn-warning btn-sm">Buy tickets {{ price | formatPrice}} €</button>
           </td>
         </tr>
         </tbody>
@@ -85,10 +85,11 @@
     },
     methods: {
       lookUpTrains(payload) {
-        const path = 'http://localhost:5000/Trains';
+        const path = 'https://trouvetrain.azurewebsites.net/Trains';
         axios.get(path, payload)
           .then((res) => {
             this.journeys = res.data.journeys;
+            this.price = res.data.price;
             this.showJourneys = true;
           })
           .catch((error) => {
