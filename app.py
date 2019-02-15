@@ -88,7 +88,7 @@ def find_train():
            "fromCity": from_city,
            "toCity": to_city,
            "journeys": journeys,
-           "price": 30} #get_journey_price(from_city, to_city)}
+           "price": get_journey_price(from_city, to_city)}
     print(res)
     print(f"number of hits : {len(journeys)}")
     res = jsonify(res)
